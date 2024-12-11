@@ -1,12 +1,10 @@
 add_library(grido grido.cc)
 target_include_directories(grido PUBLIC /opt/homebrew/include)
 
-add_executable(range_test range_test.cc)
-target_link_libraries(range_test PUBLIC grido)
-
-add_executable(algorithm_test algorithm_test.cc)
-target_link_libraries(algorithm_test PUBLIC grido)
-
-add_executable(multirange_test multirange_test.cc)
-target_link_libraries(multirange_test PUBLIC grido)
-
+if(GRIDO_BUILD_TESTS)
+  foreach(testItem IN ITEMS range algorithm multirange)
+    add_executable("${testItem}_test" "${testItem}_test.cc")
+    target_link_libraries("${testItem}_test" PUBLIC grido Boost::ut)
+    add_test(NAME "${testItem}_test" COMMAND "${testItem}_test")
+  endforeach()
+endif()

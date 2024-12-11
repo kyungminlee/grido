@@ -1,16 +1,18 @@
 #include "range.hh"
 #include "algorithm.hh"
 #include <iostream>
-#include "test.hh"
+// #include "test.hh"
+#include <boost/ut.hpp>
 
 using namespace grido;
-
 
 int main() {
   static_assert(std::random_access_iterator<integer_as_iterator<int>>, "int as an interator");
   static_assert(std::random_access_iterator<integer_as_iterator<std::size_t>>, "std::size_t as an interator");
 
   basic_integer_range<int> b(5);
+
+  boost::ut::expect(b.size() == 5);
 
   std::cout << "b = " << b << '\n';
   for (auto const & i: b) {
