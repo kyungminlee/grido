@@ -78,7 +78,9 @@ jobs:
     
     - name: Code Coverage - Generation
       uses: danielealbano/lcov-action@v3
-
+      with:
+        build_dir: ${{ steps.strings.outputs.build-output-dir }}
+        base_dir: ${{github.workspace}}
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
       with:
