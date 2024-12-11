@@ -6,7 +6,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 option(GRIDO_BUILD_TESTS "Build tests" ON)
 
 include(cmake/CPM.cmake)
-CPMAddPackage("gh:boost-ext/ut@2.1.1")
+# CPMAddPackage("gh:boost-ext/ut@2.1.1")
+CPMAddPackage("gh:doctest/doctest@2.4.11")
 
 if(GRIDO_BUILD_TESTS)
   enable_testing()
