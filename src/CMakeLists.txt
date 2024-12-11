@@ -1,7 +1,7 @@
 add_library(grido grido.cc)
 target_include_directories(grido PUBLIC /opt/homebrew/include)
 
-if(GRIDO_BUILD_TESTS)
+if(BUILD_TESTING)
   foreach(testItem IN ITEMS range algorithm multirange)
     add_executable("${testItem}_test" "${testItem}_test.cc")
     target_link_libraries("${testItem}_test" PUBLIC grido doctest::doctest)
