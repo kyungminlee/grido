@@ -1,5 +1,6 @@
 #pragma once
 
+#include "algorithm.hh"
 #include <cstddef>
 #include <type_traits>
 #include <iterator>
@@ -131,6 +132,7 @@ namespace grido {
 
   template <typename I> class basic_integer_range;
   template <typename I> class unit_integer_range;
+  template <typename I, typename S> class integer_range;
 
   template <typename I>
   class basic_integer_range {
@@ -155,6 +157,7 @@ namespace grido {
     constexpr const_iterator begin() const { return const_iterator(0); }
     constexpr const_iterator end() const { return const_iterator(_end); }
     constexpr value_type operator[](difference_type n) const { return n; }
+    constexpr size_type ravel(value_type const & v) const { return v; }
 
     template <typename V>
     explicit operator basic_integer_range<V>() const { return basic_integer_range<V>(V(_end)); }
@@ -164,10 +167,23 @@ namespace grido {
       return os << ':' << r._end;
     }
 
+    friend class for_each_fn<basic_integer_range const &>;
+
   private:
     value_type _end;
   }; // class basic_integer_range
 
+
+  template <typename I>
+  class for_each_fn<basic_integer_range<I> const &> {
+  public:
+    template <typename Func>
+    void operator()(basic_integer_range<I> const & container, Func && func) const {
+      for(I i = 0 ; i != container._end ; ++i) {
+        func(i);
+      }
+    }
+  };
 
 
   template <typename I>
@@ -199,6 +215,9 @@ namespace grido {
     constexpr const_iterator end() const { return const_iterator(_end); }
     constexpr value_type operator[](difference_type n) const { return _begin + n; }
 
+    constexpr size_type ravel(value_type const & v) const { return v - _begin; }
+
+
     template <typename V>
     explicit operator unit_integer_range<V>() const { return unit_integer_range<V>(V(_end)); }
 
@@ -207,10 +226,24 @@ namespace grido {
       return os << r._begin << ':' << r._end;
     }
 
+    friend class for_each_fn<unit_integer_range const &>;
+
   private:
     value_type _begin;
     value_type _end;
   }; // class unit_integer_range
+
+
+  template <typename I>
+  class for_each_fn<unit_integer_range<I> const &> {
+  public:
+    template <typename Func>
+    void operator()(unit_integer_range<I> const & container, Func && func) const {
+      for(I i = container._begin ; i != container._end ; ++i) {
+        func(i);
+      }
+    }
+  };
 
 
   template <typename T, typename D>
@@ -266,7 +299,8 @@ namespace grido {
     constexpr const_iterator cend() const { return const_iterator(_end, _step); }
     constexpr const_iterator begin() const { return const_iterator(_begin, _step); }
     constexpr const_iterator end() const { return const_iterator(_end, _step); }
-    constexpr value_type operator[](difference_type n) const { return _begin + n; }
+    constexpr value_type operator[](difference_type n) const { return _begin + n * _step; }
+    constexpr size_type ravel(value_type const & v) const { return (v - _begin) / _step; }
 
     template <typename V>
     explicit operator integer_range<V>() const { return integer_range<V>(V(_end)); }
@@ -276,11 +310,28 @@ namespace grido {
       return os << r._begin << ':' << r._end << ':' << r._step;
     }
 
+    step_type const & step() const { return _step; }
+
+    friend class for_each_fn<integer_range const &>;
+
   private:
     value_type _begin;
     value_type _end;
     step_type _step;
   }; // class integer_range
+
+
+  // container type should be reference
+  template <typename I, typename S>
+  class for_each_fn<integer_range<I, S> const &> {
+  public:
+    template <typename Func>
+    void operator()(integer_range<I, S> const & container, Func && func) const {
+      for(I i = container._begin ; i != container._end ; i += container._step) {
+        func(i);
+      }
+    }
+  };
 
 
 } // namespac grido

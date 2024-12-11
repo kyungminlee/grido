@@ -1,76 +1,26 @@
-// #pragma once
+#pragma once
 
-// #include <execution>
+#include <execution>
+#include <utility>
+#include "test.hh"
 
-// namespace grido {
+namespace grido {
+  
+  // container type should be reference
+  template <typename Container>
+  class for_each_fn {
+  public:
+    template <typename Func>
+    void operator()(Container container, Func && func) const {
+      std::cout << "for_each_fn<" << DeclTypeName<Container>()() << ">::operator()\n";
+      for(auto iter = container.begin() ; iter != container.end() ; ++iter) {
+        func(*iter);
+      }
+    }
+  };
 
-//   template <typename Container>
-//   class for_each_iterator {
-
-//     template <typename Func>
-//     void for_each(Container const & container, Func && func) {
-//       for(auto const item: container) {
-//         func(item);
-//       }
-//     }
-
-//     template <typename Func>
-//     void for_each(Container & container, Func && func) {
-//       for(auto const item: container) {
-//         func(item);
-//       }
-//     }
-
-//     template <typename Func>
-//     void for_each(Container && container, Func && func) {
-//       for(auto const item: container) {
-//         func(item);
-//       }
-//     }
-
-//     // openmp
-//     template <typename Func>
-//     void for_each_parallel(Container const & container, Func && func) {
-//       #pragma omp parallel for
-//       for (auto iter = container.begin() ; iter != container.end() ; ++iter) {
-//         func(*iter);
-//       }
-//     }
-
-//     // openmp
-//     template <typename Func>
-//     void for_each_parallel(Container & container, Func && func) {
-//       #pragma omp parallel for
-//       for (auto iter = container.begin() ; iter != container.end() ; ++iter) {
-//         func(*iter);
-//       }
-//     }
-//     // openmp
-//     template <typename Func>
-//     void for_each_parallel(Container && container, Func && func) {
-//       #pragma omp parallel for
-//       for (auto iter = container.begin() ; iter != container.end() ; ++iter) {
-//         func(*iter);
-//       }
-//     }
-//   };
-
-
-//   template <typename Container, typename Func>
-//   void for_each(Container & container, Func && func) {
-//     for_each_iterator<Container>
-//     for(auto const item: container) {
-//       func(item);
-//     }
-//   }
-
-//   template <typename ExecutionPolicy, typename Container, typename Func>
-//   void for_each(Container && container, Func && func) {
-//     for(auto const item: container) {
-//       func(item);
-//     }
-//   }
-
-
-
-// };
+  template <typename Container, typename UnaryFunc>
+  void for_each(Container && container, UnaryFunc && func) {
+    for_each_fn<Container &&>()(std::forward<Container>(container), std::forward<UnaryFunc>(func));
+  }
+};

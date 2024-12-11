@@ -1,41 +1,9 @@
 #include "range.hh"
 #include "algorithm.hh"
 #include <iostream>
+#include "test.hh"
 
 using namespace grido;
-
-template <typename T>
-class DeclTypeName {
-public:
-  std::string operator()() const {
-    return typeid(T).name();
-  }
-};
-
-template <typename T>
-class DeclTypeName<T &> {
-public:
-  std::string operator()() const {
-    return DeclTypeName<T>()() + " &";
-  }
-};
-
-template <typename T>
-class DeclTypeName<T &&> {
-public:
-  std::string operator()() const {
-    return DeclTypeName<T>()() + " &&";
-  }
-};
-
-
-template <typename T>
-class DeclTypeName<T const> {
-public:
-  std::string operator()() const {
-    return DeclTypeName<T>()() + " const";
-  }
-};
 
 
 int main() {
