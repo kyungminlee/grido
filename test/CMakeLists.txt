@@ -1,0 +1,7 @@
+if(BUILD_TESTING)
+  foreach(testItem IN ITEMS range multirange algorithm)
+    add_executable("${testItem}_test" "${testItem}_test.cc")
+    target_link_libraries("${testItem}_test" PUBLIC grido doctest::doctest)
+    add_test(NAME "${testItem}_test" COMMAND "${testItem}_test")
+  endforeach()
+endif()
