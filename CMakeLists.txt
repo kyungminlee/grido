@@ -28,8 +28,10 @@ include(cmake/CPM.cmake)
 # CPMAddPackage("gh:boost-ext/ut@2.1.1")
 CPMAddPackage("gh:doctest/doctest@2.4.11")
 
+add_subdirectory(src)
+
 if(BUILD_TESTING AND (PROJECT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
   enable_testing()
+  add_subdirectory(test)
 endif()
 
-add_subdirectory(src)

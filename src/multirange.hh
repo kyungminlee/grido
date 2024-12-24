@@ -1,5 +1,5 @@
 #pragma once
-#include "algorithm.hh"
+#include "algorithm/algorithm.hh"
 #include <tuple>
 
 namespace grido {

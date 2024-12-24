@@ -1,6 +1,6 @@
 #pragma once
 
-#include "algorithm.hh"
+#include "algorithm/algorithm.hh"
 #include <cstddef>
 #include <type_traits>
 #include <iterator>

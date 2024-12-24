@@ -1,10 +1,3 @@
 add_library(grido grido.cc)
+target_include_directories(grido PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_include_directories(grido PUBLIC /opt/homebrew/include)
-
-if(GRIDO_BUILD_TESTS)
-  foreach(testItem IN ITEMS range algorithm multirange)
-    add_executable("${testItem}_test" "${testItem}_test.cc")
-    target_link_libraries("${testItem}_test" PUBLIC grido doctest::doctest)
-    add_test(NAME "${testItem}_test" COMMAND "${testItem}_test")
-  endforeach()
-endif()
